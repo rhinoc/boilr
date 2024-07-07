@@ -1,0 +1,16 @@
+{
+  "exclude": ["vite.config.mts"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "Bundler",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "sourceMap": true,
+    "rootDir": "src",
+    "strict": true,
+    "paths": {
+      "$utils/*": ["./src/utils/*"],
+      "$constants/*": ["./src/constants/*"]
+    }
+  }
+}

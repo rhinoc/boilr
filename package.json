@@ -1,0 +1,147 @@
+{
+  "name": "boilr",
+  "displayName": "Boilr - Generate Any File by Boilerplate",
+  "description": "Create and apply boilerplates easily from context menu.",
+  "version": "0.0.1",
+  "icon": "./assets/icon.png",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "extension.boilr.new_file",
+        "category": "_boilr",
+        "title": "New File from Boilerplate..."
+      },
+      {
+        "command": "extension.boilr.create_boilerplate",
+        "category": "_boilr",
+        "title": "Create Boilerplate from Selection"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "extension.boilr.new_file",
+          "group": "_boilr@1"
+        },
+        {
+          "command": "extension.boilr.create_boilerplate",
+          "group": "_boilr@2"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "Boilr Configuration",
+      "properties": {
+        "boilr.path": {
+          "description": "Path to the boilerplates directory relative to workspace root path.",
+          "type": [
+            "array"
+          ],
+          "default": [
+            "./.boilr"
+          ]
+        },
+        "boilr.logLevel": {
+          "description": "Log level",
+          "type": [
+            "string"
+          ],
+          "enum": [
+            "info",
+            "warn",
+            "error"
+          ],
+          "default": "warn"
+        },
+        "boilr.nameVariables": {
+          "description": "Customize your own name variables.",
+          "type": [
+            "object"
+          ],
+          "properties": {
+            "original": {
+              "type": "string"
+            },
+            "lowerCase": {
+              "type": "string"
+            },
+            "upperCase": {
+              "type": "string"
+            },
+            "snakeCase": {
+              "type": "string"
+            },
+            "upperSnakeCase": {
+              "type": "string"
+            },
+            "kebabCase": {
+              "type": "string"
+            },
+            "pascalCase": {
+              "type": "string"
+            },
+            "camelCase": {
+              "type": "string"
+            },
+            "dotCase": {
+              "type": "string"
+            }
+          }
+        },
+        "boilr.nameVariablePriorityInFile": {
+          "type": "array",
+          "default": [
+            "camelCase",
+            "pascalCase"
+          ],
+          "description": "The priority of the name variable when same string encountered in creating boilerplate file."
+        },
+        "boilr.nameVariablePriorityInFolder": {
+          "type": "array",
+          "default": [
+            "kebabCase"
+          ],
+          "description": "The priority of the name variable when same string encountered in creating boilerplate folder."
+        },
+        "boilr.customVariables": {
+          "type": "object",
+          "description": "Customize your own variables. Those variables will be used when generate files from boilerplate."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run package",
+    "compile": "vite build",
+    "watch": "vite build --watch",
+    "package": "vite build --mode production",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.5",
+    "@types/node": "20.x",
+    "@types/vscode": "^1.90.0",
+    "vite": "^5.3.2",
+    "vite-tsconfig-paths": "^4.3.2",
+    "eslint": "latest",
+    "prettier": "latest",
+    "husky": "latest",
+    "lint-staged": "latest"
+  },
+  "dependencies": {
+    "mustache": "^4.2.0"
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,md}": "prettier --write"
+  }
+}
