@@ -2,7 +2,7 @@
 
 ![icon](/assets/logo.png)
 
-Boilr is a VSCode extension that enables you to **create** and **apply** boilerplate templates to generate any files or folders within your project workspace.
+[Boilr](https://marketplace.visualstudio.com/items?itemName=rhinoc.boilr) is a VSCode extension that enables you to **create** and **apply** boilerplate templates to generate any files or folders within your project workspace.
 
 ## Features
 

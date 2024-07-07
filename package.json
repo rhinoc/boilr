@@ -13,7 +13,15 @@
     "vscode": "^1.90.0"
   },
   "categories": [
-    "Snippets"
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "boilerplate",
+    "template",
+    "scaffold",
+    "mustache",
+    "generate"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
