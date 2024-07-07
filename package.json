@@ -4,6 +4,7 @@
   "description": "Create and apply boilerplates easily from context menu.",
   "version": "0.0.1",
   "icon": "./assets/icon.png",
+  "publisher": "rhinoc",
   "repository": {
     "type": "git",
     "url": "https://github.com/rhinoc/boilr"
