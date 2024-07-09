@@ -32,26 +32,31 @@
 
 The underlying template engine utilized by Boilr is [Mustache](https://mustache.github.io/). For basic usage of this extension, you don't have to learn this language. But for advanced use, you may refer to [Mustache documentation](https://mustache.github.io/mustache.5.html).
 
+> ⚡ Warning:  
+> Mustache's default opening and closing tags is `{{` and `}}`.  
+> However, to compatible with React TSX, Boilr's default tags is `%_` and `_%`.  
+> You can customize default tags by setting `boilr.tags`.
+
 ### Glossary
 
-- Tag: Tags are denoted by double mustaches, e.g., `{{person}}` is a tag with `person` as its key.
-- Variable: The most fundamental tag type is the variable. For instance, if the tag is `{{person}}`, then `person` is the variable.
+- Tag: Tags are denoted by double mustaches, e.g., `%_person_%` is a tag with `person` as its key.
+- Variable: The most fundamental tag type is the variable. For instance, if the tag is `%_person_%`, then `person` is the variable.
 
 ### Support Variables
 
 #### Name Variables
 
-| Variable Type    | Default Variable              | Corresponding Tag               | Example       |
-| ---------------- | ----------------------------- | ------------------------------- | ------------- |
-| Original         | \_\_ORIGINAL_NAME\_\_         | `{{__ORIGINAL_NAME__}}`         | some variable |
-| Lower Case       | \_\_LOWER_CASE_NAME\_\_       | `{{__LOWER_CASE_NAME__}}`       | some variable |
-| Upper Case       | \_\_UPPER_CASE_NAME\_\_       | `{{__UPPER_CASE_NAME__}}`       | SOME VARIABLE |
-| Camel Case       | \_\_CAMEL_CASE_NAME\_\_       | `{{__CAMEL_CASE_NAME__}}`       | someVariable  |
-| Snake Case       | \_\_SNAKE_CASE_NAME\_\_       | `{{__SNAKE_CASE_NAME__}}`       | some_variable |
-| Upper Snake Case | \_\_UPPER_SNAKE_CASE_NAME\_\_ | `{{__UPPER_SNAKE_CASE_NAME__}}` | SOME_VARIABLE |
-| Kebab Case       | \_\_KEBAB_CASE_NAME\_\_       | `{{__KEBAB_CASE_NAME__}}`       | some-variable |
-| Pascal Case      | \_\_PASCAL_CASE_NAME\_\_      | `{{__PASCAL_CASE_NAME__}}`      | SomeVariable  |
-| Dot Case         | \_\_DOT_CASE_NAME\_\_         | `{{__DOT_CASE_NAME__}}`         | some.variable |
+| Variable Type    | Default Variable | Corresponding Tag | Example       |
+| ---------------- | ---------------- | ----------------- | ------------- |
+| Original         | original         | `%_ORIGINAL_%`    | some variable |
+| Lower Case       | lowerCase        | `%_LOWER_CASE_%`  | some variable |
+| Upper Case       | upperCase        | `%_UPPER_CASE_%`  | SOME VARIABLE |
+| Camel Case       | camelCase        | `%_CAMEL_CASE_%`  | someVariable  |
+| Snake Case       | snakeCase        | `%_SNAKE_CASE_%`  | some_variable |
+| Upper Snake Case | upperSnakeCase   | `%_UPPER_CASE_%`  | SOME_VARIABLE |
+| Kebab Case       | kebabCase        | `%_KEBAB_CASE_%`  | some-variable |
+| Pascal Case      | pascalCase       | `%_PASCAL_CASE_%` | SomeVariable  |
+| Dot Case         | dotCase          | `%_DOT_CASE_%`    | some.variable |
 
 You can also customize those variables by setting `boilr.nameVariables` in settings.
 
@@ -61,7 +66,7 @@ Boilr offers flexibility with custom variables, allowing you to tailor the boile
 
 1. Setting `boilr.customVariables` in VSCode Settings.
 
-```json
+```jsonc
 "boilr.customVariables": {
   "x": 1,
   "y": 2,
@@ -70,7 +75,7 @@ Boilr offers flexibility with custom variables, allowing you to tailor the boile
   }
 }
 
-// then you can use {{x}} {{y}} {{hello.world}} in your boilerplate.
+// then you can use %_x_% %_y_% %_hello.world_% in your boilerplate.
 ```
 
 2. Using Configuration File `boilr.config.cjs`.
@@ -93,14 +98,14 @@ module.exports = {
   },
 };
 
-// then you can use {{date}} and {{rand}} in your boilerplate.
+// then you can use %_date_% and %_rand_% in your boilerplate.
 ```
 
 The inject function receives a context object, which has following interface:
 
 ```ts
 interface Context {
-  // {{name}} from user input
+  // %_name_% from user input
   name: string;
   // Date.now()
   timestamp: number;
@@ -127,8 +132,11 @@ interface Context {
 This extension contributes the following settings:
 
 - `boilr.path`: The path to the boilerplates directory, relative to the workspace root path.
+- `boilr.tags`: Customize opening and closing tags for Mustache to parsing templates. Default is `["%_","_%"].
+- `boilr.suffix`: The suffix of the boilerplate file. Default is `.mustache`.
 - `boilr.logLevel`: The log level of the extension. The default is `warn`, you can access logs in the output panel's `Boilr` channel.
 - `boilr.nameVariables`: Customize your own name variables.
 - `boilr.nameVariablePriorityInFile`: The priority of the name variable when same string encountered in creating boilerplate file.
-- `boilr.nameVariablePriorityInFolder`: The priority of the name variable when same string encountered in creating boilerplate folder.
+- `boilr.nameVariablePriorityInPath`: The priority of the name variable when same string encountered in boilerplate file path.
 - `boilr.customVariables`: Customize your own custom variables.
+- `boilr.promptForMissingVariables`: Define if prompt a input box when encourter undefined variable in template.

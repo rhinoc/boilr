@@ -1,6 +1,7 @@
 import type { NameCase } from '$constants/case';
 import { BUILT_IN_NAME_VARIABLE } from '$constants/variable';
 import { getNameCaseList } from '$utils/common/case';
+import { getConfigurationByKey } from './configuration';
 
 /** less has higher priority */
 function getPriority(num: number) {
@@ -29,19 +30,24 @@ export function getNameVal2VarMap(name: string, priorities: NameCase[] = []) {
   for (const [nameVariable, value] of Object.entries(nameVariables)) {
     // if not set before
     if (!result[value]) {
-      result[value] = `{{${nameVariable}}}`;
+      result[value] = getVariableTag(nameVariable);
       continue;
     }
 
-    // get prev name variable stripping {{ and }}
+    // get prev name variable stripping tags
     const prevNameVariable = result[value].slice(2, -2);
     const prevPriority = getPriority(varPriorities.indexOf(prevNameVariable as NameCase));
     const currentPriority = getPriority(varPriorities.indexOf(nameVariable as NameCase));
     if (currentPriority < prevPriority) {
       // if has higher priority, override
-      result[value] = `{{${nameVariable}}}`;
+      result[value] = getVariableTag(nameVariable);
     }
   }
 
   return result;
+}
+
+export function getVariableTag(variable: string, tags?: [string, string]) {
+  const [openTag, closeTag] = tags ?? getConfigurationByKey('tags');
+  return `${openTag}${variable}${closeTag}`;
 }

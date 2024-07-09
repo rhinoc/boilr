@@ -4,12 +4,11 @@ import fs from 'fs';
 import { COMMAND } from '$constants/command';
 import { isExtensionError, makeError } from '$utils/common/error';
 import { getConfigurationByKey } from '$utils/business/configuration';
-import { BOILERPLATE_SUFFIX } from '$constants/file';
 import { logger } from '$utils/business/logger';
 import { getNodes } from '$utils/common/node';
 import { getAbsolutePath } from '$utils/business/path';
 import { promptInputBox } from '$utils/business/prompt-input-box';
-import { getNameVal2VarMap } from '$utils/business/name-variable';
+import { getNameVal2VarMap, getVariableTag } from '$utils/business/name-variable';
 import { generateBoilerplates } from './generate';
 import { CreateBoilerplateErrorCode } from './error-code';
 
@@ -36,23 +35,26 @@ export function registerCommand() {
         throw makeError(CreateBoilerplateErrorCode.INPUT_BOILERPLATE_NAME_INVALID, `boilerplate name is empty`);
       }
       // 2. [user] get name
-      const name = await promptInputBox(`input value for {{name}} and it's varients`);
+      const name = await promptInputBox(`input value for ${getVariableTag('name')} to generate name varients`);
 
       if (name.length === 0) {
-        throw makeError(CreateBoilerplateErrorCode.INPUT_NAME_VAR_INVALID, `value for {{name}} is empty`);
+        throw makeError(
+          CreateBoilerplateErrorCode.INPUT_NAME_VAR_INVALID,
+          `value for ${getVariableTag('name')} is empty`,
+        );
       }
 
       // 3. get all variants for name
       const filePriorities = getConfigurationByKey('nameVariablePriorityInFile');
-      const folderPriorities = getConfigurationByKey('nameVariablePriorityInFolder');
+      const pathPriorities = getConfigurationByKey('nameVariablePriorityInPath');
       const val2varInFile = getNameVal2VarMap(name, filePriorities);
-      const val2varInFolder = getNameVal2VarMap(name, folderPriorities);
+      const val2varInPath = getNameVal2VarMap(name, pathPriorities);
       logger.info('val2varInFile', val2varInFile);
-      logger.info('val2varInFolder', val2varInFolder);
+      logger.info('val2varInPath', val2varInPath);
 
       // 4. get all sources
       const nodes = getNodes(sourceDirPath, true).filter(
-        (node) => node.type === 'folder' || !node.name.endsWith(BOILERPLATE_SUFFIX),
+        (node) => node.type === 'folder' || !node.name.endsWith(getConfigurationByKey('suffix')),
       );
 
       // 5. get target dir path to store boilerplate
@@ -71,7 +73,7 @@ export function registerCommand() {
       fs.mkdirSync(targetDirPath, { recursive: true });
 
       // 6. generate boilerplate
-      generateBoilerplates(targetDirPath, nodes, val2varInFolder, val2varInFile);
+      generateBoilerplates(targetDirPath, nodes, val2varInPath, val2varInFile);
 
       logger.toast('info', `${boilerplateName} is created successfully!`);
     } catch (ex) {

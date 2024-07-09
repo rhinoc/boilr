@@ -8,13 +8,13 @@ import type { Node } from '$utils/common/node';
 import { getVariables } from '$utils/common/template';
 import { type BoilerplateConfig } from './config-parser';
 import type { Context } from './context';
-import { getNameVar2ValMap } from '$utils/business/name-variable';
+import { getNameVar2ValMap, getVariableTag } from '$utils/business/name-variable';
 
 /**
  * variable map from user input name
  */
 async function getNameAndNameVariableMap() {
-  const name = await promptInputBox(`input value for {{name}} and it's varients`);
+  const name = await promptInputBox(`input value for ${getVariableTag('name')} and it's varients`);
   assert(name.length, 'name is required');
   const map = getNameVar2ValMap(name);
 
@@ -87,16 +87,17 @@ export async function getStaticVariableMap(
   logger.info('configVars found:', configVars);
 
   // left unknown variables that need user input
+  const shouldPrompt = getConfigurationByKey('promptForMissingVariables');
   for (const key of variables) {
-    if (key in result || configVars.includes(key)) {
+    if (key in result || configVars.includes(key) || !key) {
       continue;
     }
 
-    const value = await promptInputBox(`input value for {{${key}}}`);
-    assert(value.length > 0, `value for {{${key}}} is required`);
-    if (value) {
-      result[key] = value;
+    let value = '';
+    if (shouldPrompt) {
+      value = (await promptInputBox(`input value for ${getVariableTag(key)}`)) ?? value;
     }
+    result[key] = value;
   }
 
   return result;
@@ -104,12 +105,13 @@ export async function getStaticVariableMap(
 
 export function getVariableListFromNodes(nodes: Node[]) {
   const variablesSet = new Set<string>();
+  const tags = getConfigurationByKey('tags');
   for (const node of nodes) {
-    getVariables(node.name).forEach((variable) => variablesSet.add(variable));
+    getVariables(node.name, tags).forEach((variable) => variablesSet.add(variable));
 
     if (node.type === 'file') {
       const boilerplate = fs.readFileSync(node.path, { encoding: 'utf-8' });
-      getVariables(boilerplate).forEach((variable) => variablesSet.add(variable));
+      getVariables(boilerplate, tags).forEach((variable) => variablesSet.add(variable));
     }
   }
   const variables = Array.from(variablesSet);

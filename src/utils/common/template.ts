@@ -18,16 +18,18 @@ function getMustacheTag<Rest extends any[] = any[]>(parsedItem: [string, string,
   return value.split('.')[0];
 }
 
-export function getVariables(boilerplate: string) {
-  const parsed = Mustache.parse(boilerplate);
+export function getVariables(boilerplate: string, tags?: [string, string]) {
+  const parsed = Mustache.parse(boilerplate, tags);
   // @ts-expect-error
-  const tags = parsed.filter(isMustacheTag).map(getMustacheTag) as string[];
+  const vars = parsed.filter(isMustacheTag).map(getMustacheTag) as string[];
 
-  return Array.from(new Set(tags));
+  return Array.from(new Set(vars));
 }
 
-export function fill(boilerplate: string, var2val: Record<string, string>) {
-  return Mustache.render(boilerplate, var2val);
+export function fill(boilerplate: string, var2val: Record<string, string>, tags?: [string, string]) {
+  return Mustache.render(boilerplate, var2val, undefined, {
+    tags,
+  });
 }
 
 export function drain(text: string, val2var: Record<string, string>) {

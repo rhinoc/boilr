@@ -1,5 +1,5 @@
 export interface Context {
-  // {{name}} that user input
+  // name variable that user input
   name: string;
   // Date.now()
   timestamp: number;

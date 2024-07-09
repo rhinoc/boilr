@@ -8,8 +8,11 @@ export interface Configuration {
   logLevel: 'info' | 'warn' | 'error';
   nameVariables?: Record<NameCase, string>;
   nameVariablePriorityInFile?: NameCase[];
-  nameVariablePriorityInFolder?: NameCase[];
+  nameVariablePriorityInPath?: NameCase[];
   customVariables?: Record<string, string>;
+  promptForMissingVariables: boolean;
+  tags: [string, string];
+  suffix: string;
 }
 
 export function getConfigurationByKey<T extends keyof Configuration>(key: T): Configuration[T] {

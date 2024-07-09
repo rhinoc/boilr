@@ -63,6 +63,23 @@
             "./.boilr"
           ]
         },
+        "boilr.tags": {
+          "description": "Customize opening and closing tags for Mustache to parsing templates.",
+          "type": [
+            "array"
+          ],
+          "default": [
+            "%_",
+            "_%"
+          ]
+        },
+        "boilr.suffix": {
+          "description": "Suffix for template files, default is `.mustache`.",
+          "type": [
+            "string"
+          ],
+          "default": ".mustache"
+        },
         "boilr.logLevel": {
           "description": "Log level",
           "type": [
@@ -118,16 +135,21 @@
           ],
           "description": "The priority of the name variable when same string encountered in creating boilerplate file."
         },
-        "boilr.nameVariablePriorityInFolder": {
+        "boilr.nameVariablePriorityInPath": {
           "type": "array",
           "default": [
             "kebabCase"
           ],
-          "description": "The priority of the name variable when same string encountered in creating boilerplate folder."
+          "description": "The priority of the name variable when same string encountered in boilerplate file path."
         },
         "boilr.customVariables": {
           "type": "object",
           "description": "Customize your own variables. Those variables will be used when generate files from boilerplate."
+        },
+        "boilr.promptForMissingVariables": {
+          "type": "boolean",
+          "default": false,
+          "description": "Prompt input box for missing variables when generating files from boilerplate."
         }
       }
     }
@@ -141,7 +163,7 @@
   },
   "devDependencies": {
     "@types/mustache": "^4.2.5",
-    "@types/node": "20.x",
+    "@types/node": "^20.14.10",
     "@types/vscode": "^1.90.0",
     "eslint": "latest",
     "husky": "latest",

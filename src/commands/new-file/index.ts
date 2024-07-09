@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { COMMAND } from '$constants/command';
 import { EXTENSION_NAMES } from '$constants/name';
-import { BOILERPLATE_SUFFIX } from '$constants/file';
 import { isExtensionError, makeError } from '$utils/common/error';
 import { getNodes } from '$utils/common/node';
 import { logger } from '$utils/business/logger';
@@ -10,6 +9,7 @@ import { pickBoilerplate } from './pick';
 import { apply } from './apply';
 import path from 'path';
 import fs from 'fs';
+import { getConfigurationByKey } from '$utils/business/configuration';
 
 export function registerCommand() {
   const disposable = vscode.commands.registerCommand(COMMAND.NEW_FILE, async (e?: vscode.Uri) => {
@@ -43,7 +43,7 @@ export function registerCommand() {
 
       // 2. find all targets
       const nodes = getNodes(boilerplate.dirPath).filter(
-        (node) => node.type === 'folder' || node.name.endsWith(BOILERPLATE_SUFFIX),
+        (node) => node.type === 'folder' || node.name.endsWith(getConfigurationByKey('suffix')),
       );
 
       if (nodes.length === 0) {
